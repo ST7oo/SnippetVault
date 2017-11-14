@@ -1,0 +1,13 @@
+<div class="centeritems mdl-grid">
+    <div class="mdl-layout-spacer"></div>
+    <div class="mdl-cell mdl-cell--4-col">
+        <h3>Login</h3>
+        <form [formGroup]="form">
+            <mdl-textfield label="Email" name="email" type="text" formControlName="email" floating-label pattern="^[a-z]+[a-z0-9._]+@[a-z]+\.[a-z.]{2,5}$"
+                error-msg="Please provide a correct email!"></mdl-textfield>
+            <mdl-textfield label="Password" type="password" formControlName="password" floating-label></mdl-textfield>
+            <button mdl-button (click)="login()" [disabled]="!form.valid" mdl-button-type="raised" mdl-ripple mdl-colored="accent">Login</button>
+        </form>
+    </div>
+    <div class="mdl-layout-spacer"></div>
+</div>
