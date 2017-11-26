@@ -14,6 +14,7 @@ import { LoginComponent } from './login/login.component';
 import { PageNotFoundComponent } from "./not-found/not-found.component";
 import { SignupComponent } from './signup/signup.component';
 import { SnippetsComponent } from './snippets/snippets.component';
+import { NewDialogComponent } from './new-dialog/new-dialog.component';
 
 
 @NgModule({
@@ -23,7 +24,11 @@ import { SnippetsComponent } from './snippets/snippets.component';
         LoginComponent,
         PageNotFoundComponent,
         SignupComponent,
-        SnippetsComponent
+        SnippetsComponent,
+        NewDialogComponent
+    ],
+    entryComponents: [
+        NewDialogComponent
     ],
     imports: [
         BrowserModule,
