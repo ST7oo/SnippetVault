@@ -3,7 +3,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularFireModule } from "angularfire2";
 import { AngularFireAuth } from "angularfire2/auth";
-import { MdlModule } from "@angular-mdl/core";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { environment } from "../environments/environment";
 import { AppRoutingModule } from './app-routing.module';
@@ -15,6 +16,7 @@ import { PageNotFoundComponent } from "./not-found/not-found.component";
 import { SignupComponent } from './signup/signup.component';
 import { SnippetsComponent } from './snippets/snippets.component';
 import { NewDialogComponent } from './new-dialog/new-dialog.component';
+import { MaterialComponentsModule } from './material-components.module';
 
 
 @NgModule({
@@ -33,11 +35,13 @@ import { NewDialogComponent } from './new-dialog/new-dialog.component';
     imports: [
         BrowserModule,
         AngularFireModule.initializeApp(environment.firebase),
+        BrowserAnimationsModule,
         AppRoutingModule,
-        MdlModule,
         FormsModule,
         ReactiveFormsModule,
-        SharedModule
+        SharedModule,
+        MaterialComponentsModule,
+        FlexLayoutModule
     ],
     providers: [
         AngularFireAuth

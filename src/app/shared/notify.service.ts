@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
-import { MdlSnackbarService } from '@angular-mdl/core';
+import { MatSnackBar } from '@angular/material';
 
 export interface Msg {
     content: string;
@@ -13,13 +13,13 @@ export class NotifyService {
     private _msgSource = new Subject<Msg>();
     msg = this._msgSource.asObservable();
 
-    constructor(private mdlSnackbarService: MdlSnackbarService) { }
+    constructor(private snackBar: MatSnackBar) { }
 
 
     update(content: string, style: string) {
         const msg: Msg = { content, style }
         this._msgSource.next(msg)
-        this.mdlSnackbarService.showToast(msg.content);
+        this.snackBar.open(msg.content, 'OK', { duration: 3000, verticalPosition: 'top' });
     }
 
     clear() {

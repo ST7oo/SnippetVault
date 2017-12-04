@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { MdlDialogReference } from '@angular-mdl/core';
+import { MatDialogRef } from '@angular/material';
 
 @Component({
     selector: 'app-new-dialog',
@@ -9,19 +9,16 @@ import { MdlDialogReference } from '@angular-mdl/core';
 })
 export class NewDialogComponent implements OnInit {
 
-    type: object;
+    type: string;
 
-    constructor(private dialog: MdlDialogReference) { }
+    constructor(private dialogRef: MatDialogRef<NewDialogComponent>) { }
 
     ngOnInit() {
-        this.type = {
-            text: true,
-            code: false
-        };
+        this.type = 'text';
     }
 
     close() {
-        this.dialog.hide();
+        this.dialogRef.close();
     }
 
     changeType(type) {

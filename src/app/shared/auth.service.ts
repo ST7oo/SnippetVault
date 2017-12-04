@@ -52,8 +52,8 @@ export class AuthService {
     private oAuthLogin(provider) {
         return this.aFireAuth.auth.signInWithPopup(provider)
             .then((credential) => {
-                this.notify.update('Welcome ', 'success')
-                return this.updateUserData(credential.user)
+                this.notify.update('Welcome ' + credential.user.displayName ? credential.user.displayName : '', 'success');
+                return this.updateUserData(credential.user);
             })
             .catch(error => this.handleError(error));
     }
@@ -68,10 +68,10 @@ export class AuthService {
     }
 
 
-    signUp(email: string, password: string, name?: string) {
+    signUp(email: string, password: string, name: string) {
         return this.aFireAuth.auth.createUserWithEmailAndPassword(email, password)
             .then((user) => {
-                this.notify.update('Welcome ', 'success');
+                this.notify.update('Welcome ' + name, 'success');
                 return this.updateUserData(user, name);
             });
     }
@@ -79,10 +79,9 @@ export class AuthService {
     signIn(email: string, password: string) {
         return this.aFireAuth.auth.signInWithEmailAndPassword(email, password)
             .then((user) => {
-                this.notify.update('Welcome ', 'success')
+                this.notify.update('Welcome ' + user.displayName ? user.displayName : '', 'success')
                 return this.updateUserData(user);
-            })
-            .catch(error => this.handleError(error));
+            });
     }
 
 
@@ -106,14 +105,22 @@ export class AuthService {
 
     private updateUserData(user, name?: string) {
         const userRef: AngularFirestoreDocument<User> = this.aFirestore.doc(`users/${user.uid}`);
-        const displayName = user.displayName || name || user.email;
-        const data: User = {
+        let data: User = {
             uid: user.uid,
-            email: user.email || null,
-            displayName: displayName,
-            photoURL: user.photoURL || `http://identicon.org/?t=${displayName}&s=50`
+            email: user.email,
         }
-        return userRef.set(data)
+        if (name) {
+            data.displayName = name;
+            data.photoURL = `http://identicon.org/?t=${name}&s=50`;
+        } else {
+            if (user.displayName) {
+                data.displayName = user.displayName;
+            }
+            if (user.photoURL) {
+                data.photoURL = user.photoURL;
+            }
+        }
+        return userRef.set(data, { merge: true });
     }
 
 }

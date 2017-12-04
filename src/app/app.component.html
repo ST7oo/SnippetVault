@@ -1,43 +1,21 @@
-<div class="demo-container" mdl-shadow="2">
-    <mdl-layout mdl-layout-fixed-header mdl-layout-header-seamed>
-        <mdl-layout-header>
-            <mdl-layout-header-row>
-                <mdl-layout-title>
-                    <a [routerLink]="['/']">SnippetVault</a>
-                </mdl-layout-title>
-                <mdl-layout-spacer></mdl-layout-spacer>
-                <!-- Navigation. We hide it in small screens. -->
-                <nav class="mdl-navigation mdl-layout--large-screen-only">
-                    <a *ngIf="!auth.user | async" class="mdl-navigation__link" [routerLink]="['login']">Login</a>
-                    <div *ngIf="auth.user | async as user">
-                        <span>{{user.displayName}}</span>
-                        <button mdl-button #btn3="mdlButton" [mdl-toggle-menu]="menuUser">
-                            <img class="card-img-top avatar" [src]="user.photoURL">
-                        </button>
-                        <mdl-menu #menuUser="mdlMenu" mdl-menu-position="bottom-right">
-                            <mdl-menu-item mdl-ripple (click)="signOut()">Logout</mdl-menu-item>
-                        </mdl-menu>
-                    </div>
-                </nav>
-            </mdl-layout-header-row>
-        </mdl-layout-header>
-        <mdl-layout-drawer>
-            <mdl-layout-title>
-                <a [routerLink]="['/']">SnippetVault</a>
-            </mdl-layout-title>
-            <nav class="mdl-navigation">
-                <a *ngIf="!auth.user | async" class="mdl-navigation__link" [routerLink]="['login']">Login</a>
-                <div *ngIf="auth.user | async as user">
-                    <div class="mdl-navigation__link">
-                        <span>{{user.displayName}}</span>
-                        <img class="card-img-top avatar" [src]="user.photoURL">
-                    </div>
-                    <a class="mdl-navigation__link" (click)="signOut()" href="#">Logout</a>
-                </div>
-            </nav>
-        </mdl-layout-drawer>
-        <mdl-layout-content>
-            <router-outlet></router-outlet>
-        </mdl-layout-content>
-    </mdl-layout>
+<div class="mat-typography">
+    <mat-toolbar color="primary">
+        <span>SnippetVault</span>
+        <div fxFlex="auto"></div>
+        <ng-container *ngIf="(auth.user | async) || {} as user">
+            <button mat-button *ngIf="!user.uid" [routerLink]="['login']">Login</button>
+            <div *ngIf="user.uid">
+                <button mat-button [matMenuTriggerFor]="menu" fxLayoutAlign="center center">
+                    <span class="username">{{user.displayName}}</span>
+                    <img class="card-img-top avatar" [src]="user.photoURL || 'http://identicon.org/?t=SnippetVault&s=50'">
+                </button>
+                <mat-menu #menu="matMenu" xPosition="before" [overlapTrigger]="false">
+                    <button mat-menu-item (click)="signOut()">
+                        Logout
+                    </button>
+                </mat-menu>
+            </div>
+        </ng-container>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
 </div>

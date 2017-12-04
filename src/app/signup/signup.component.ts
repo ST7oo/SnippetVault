@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MdlDialogService } from '@angular-mdl/core';
 import { AuthService } from '../shared/auth.service';
 
 @Component({
@@ -18,10 +17,11 @@ export class SignupComponent implements OnInit {
     password: FormControl;
     password2: FormControl;
     loading = false;
+    error: string;
 
-    constructor(public auth: AuthService, private fb: FormBuilder, private dialogService: MdlDialogService, private router: Router) {
+    constructor(public auth: AuthService, private fb: FormBuilder, private router: Router) {
         this.email = new FormControl('', [Validators.required, Validators.email]);
-        this.name = new FormControl();
+        this.name = new FormControl('', [Validators.required]);
         this.password = new FormControl('', [Validators.required, Validators.minLength(6)]);
         this.password2 = new FormControl('', [Validators.required, this.password_match_validator]);
         this.form = fb.group({
@@ -36,23 +36,42 @@ export class SignupComponent implements OnInit {
     }
 
     signup() {
+        this.error = '';
         this.loading = true;
-        this.auth.signUp(this.email.value, this.password.value).then((response) => {
+        this.auth.signUp(this.email.value, this.password.value, this.name.value).then((response) => {
             this.router.navigate(['/snippets']);
         }).catch((error) => {
-            console.log(error);
-            let errorCode = error.code;
-            if (errorCode == 'auth/email-already-in-use') {
-                this.dialogService.alert('Email already exists');
-            }
-            else if (errorCode == 'auth/weak-password') {
-                this.dialogService.alert('Weak password');
-            }
-            else {
-                this.dialogService.alert('Unexpected error')
+            switch (error.code) {
+                case 'auth/email-already-in-use':
+                    this.error = 'Email already exists';
+                    break;
+                case 'auth/invalid-email':
+                    this.error = 'Email is invalid';
+                    break;
+                case 'auth/weak-password':
+                    this.error = 'Weak password';
+                    break;
+                default:
+                    this.error = 'Unexpected error';
+                    break;
             }
             this.loading = false;
         });
+    }
+
+    getError(control) {
+        if (control == 'email') {
+            return this.email.hasError('required') ? 'Email is required' : this.email.hasError('email') ? 'Email is invalid' : '';
+        }
+        else if (control == 'name') {
+            return this.password.hasError('required') ? 'Name is required' : '';
+        }
+        else if (control == 'password') {
+            return this.password.hasError('required') ? 'Password is required' : this.password.hasError('minlength') ? 'Password must have minimun 6 characters' : '';
+        }
+        else if (control == 'password2') {
+            return this.password2.hasError('required') ? 'Repeat Password is required' : this.password2.hasError('mismatch') ? 'Passwords are not the same' : '';
+        }
     }
 
     private password_match_validator(g: FormControl) {

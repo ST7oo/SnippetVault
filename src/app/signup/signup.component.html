@@ -1,18 +1,26 @@
-<div class="centeritems mdl-grid">
-    <div class="mdl-layout-spacer"></div>
-    <div class="mdl-cell mdl-cell--4-col">
-        <h3>Sign up</h3>
-        <form [formGroup]="form">
-            <mdl-textfield label="Email" name="email" type="text" formControlName="email" floating-label pattern="^[a-z]+[a-z0-9._]+@[a-z]+\.[a-z.]{2,5}$"
-                error-msg="Please provide a correct email!"></mdl-textfield>
-            <mdl-textfield label="Name" name="name" type="text" formControlName="name" floating-label></mdl-textfield>
-            <mdl-textfield [class.is-invalid]="password.dirty && password.invalid"label="Password" type="password" formControlName="password" floating-label disableNativeValidityChecking error-msg="Minimun 6 characters"></mdl-textfield>
-            <mdl-textfield [class.is-invalid]="password2.dirty && password2.invalid" label="Repeat Password" type="password" formControlName="password2" floating-label disableNativeValidityChecking error-msg="Passwords are not the same"></mdl-textfield>
-            <button mdl-button (click)="signup()" [disabled]="!form.valid || loading" mdl-button-type="raised" mdl-ripple mdl-colored="accent">Sign up</button>
-            <mdl-spinner single-color [active]="loading"></mdl-spinner>
-        </form>
-        <br>
-        <a [routerLink]="['/login']">Already have an account? Log in</a>
-    </div>
-    <div class="mdl-layout-spacer"></div>
+<div fxFlexOffset="35" fxFlex="25">
+    <h3>Sign up</h3>
+    <form [formGroup]="form">
+        <mat-form-field>
+            <input matInput placeholder="Email" formControlName="email" required>
+            <mat-error *ngIf="email.invalid">{{getError('email')}}</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="Name" formControlName="name" required>
+            <mat-error *ngIf="name.invalid">{{getError('name')}}</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput type="password" placeholder="Password" formControlName="password" required>
+            <mat-error *ngIf="password.invalid">{{getError('password')}}</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput type="password" placeholder="Repeat password" formControlName="password2" required>
+            <mat-error *ngIf="password2.invalid">{{getError('password2')}}</mat-error>
+        </mat-form-field>
+        <div class="error">{{error}}</div>
+        <button mat-raised-button color="accent" (click)="signup()" [disabled]="!form.valid || loading">Sign up</button>
+        <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+    </form>
+    <br>
+    <a [routerLink]="['/login']">Already have an account? Log in</a>
 </div>

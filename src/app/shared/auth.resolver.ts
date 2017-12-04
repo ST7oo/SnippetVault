@@ -8,6 +8,11 @@ export class AuthResolver {
     constructor(private router: Router, private auth: AuthService) { }
 
     resolve() {
-        if (this.auth.user) this.router.navigate(['/snippets']);
+        // if (this.auth.user) this.router.navigate(['/snippets']);
+        return this.auth.user.take(1).map(user => !!user).do((loggedIn) => {
+            if (loggedIn) {
+                this.router.navigate(['/snippets']);
+            }
+        });
     }
 }

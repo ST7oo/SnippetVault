@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { MdlDialogService, MdlDialogReference } from '@angular-mdl/core';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { NewDialogComponent } from '../new-dialog/new-dialog.component';
 
 @Component({
@@ -10,21 +10,17 @@ import { NewDialogComponent } from '../new-dialog/new-dialog.component';
 })
 export class SnippetsComponent implements OnInit {
 
-    constructor(private dialogService: MdlDialogService) { }
+    constructor(private dialog: MatDialog) { }
 
     ngOnInit() {
     }
 
-    showDialog($event: MouseEvent) {
-        let dialog = this.dialogService.showCustomDialog({
-            component: NewDialogComponent,
-            isModal: true,
-            // openFrom: $event,
-            clickOutsideToClose: true,
-            styles: { 'width': '400px' }
+    showDialog() {
+        let dialogRef = this.dialog.open(NewDialogComponent, {
+            minWidth: '400px'
         });
-        dialog.subscribe((dialogReference: MdlDialogReference) => {
-            console.log(dialogReference);
+        dialogRef.afterClosed().subscribe((result) => {
+            console.log(result);
         });
     }
 
