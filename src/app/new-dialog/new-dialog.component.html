@@ -1,26 +1,31 @@
-<h3 mat-dialog-title>
-    <strong>
-        <input type="text" class="input" [(ngModel)]="title" placeholder="Title ..." />
-    </strong>
-</h3>
+<div mat-dialog-title>
+    <mat-form-field [floatPlaceholder]="'never'" class="full-width">
+        <textarea #titleElement matInput matTextareaAutosize class="input title" placeholder="Title..." [(ngModel)]="title" (keyup)="typeTitle($event)"></textarea>
+    </mat-form-field>
+</div>
 
 <div mat-dialog-content>
     <mat-list>
-        <mat-list-item *ngFor="let step of steps">
-            <div [ngSwitch]="step.type">
+        <mat-list-item *ngFor="let step of snippet.steps; let index = index">
+            <!-- <div [ngSwitch]="step.type">
                 <input *ngSwitchCase="'text'" type="text" class="input" [(ngModel)]="step.text" />
-            </div>
+            </div> -->
+            <input type="text" class="input" [(ngModel)]="snippet.steps[index]" />
         </mat-list-item>
         <mat-list-item>
-            <input type="text" class="input" [(ngModel)]="text" placeholder="Enter text ..." (keyup)="onKeyup($event)" />
-            <mat-button-toggle-group [(ngModel)]="type">
-                <mat-button-toggle value="text" matTooltip="Text">
-                    <mat-icon>text_fields</mat-icon>
-                </mat-button-toggle>
-                <mat-button-toggle value="code" matTooltip="Code">
-                    <mat-icon>code</mat-icon>
-                </mat-button-toggle>
-            </mat-button-toggle-group>
+            <div class="full-width" fxLayoutAlign="start start">
+                <mat-form-field [floatPlaceholder]="'never'" fxFlex="75">
+                    <textarea #newStepElement matInput matTextareaAutosize class="input" [(ngModel)]="text" placeholder="Enter text ..." (keyup)="typeText($event)"></textarea>
+                </mat-form-field>
+                <mat-button-toggle-group [(ngModel)]="type">
+                    <mat-button-toggle value="text" matTooltip="Text">
+                        <mat-icon>text_fields</mat-icon>
+                    </mat-button-toggle>
+                    <mat-button-toggle value="code" matTooltip="Code">
+                        <mat-icon>code</mat-icon>
+                    </mat-button-toggle>
+                </mat-button-toggle-group>
+            </div>
         </mat-list-item>
     </mat-list>
 </div>

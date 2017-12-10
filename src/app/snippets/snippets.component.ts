@@ -17,7 +17,7 @@ export class SnippetsComponent implements OnInit {
 
     showDialog() {
         let dialogRef = this.dialog.open(NewDialogComponent, {
-            minWidth: '400px'
+            minWidth: '600px'
         });
         dialogRef.afterClosed().subscribe((result) => {
             console.log(result);

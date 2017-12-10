@@ -1,6 +1,22 @@
 .input {
     border: none;
+    overflow-y: hidden !important;
+    resize: none !important;
     &:focus {
         outline: none;
     }
+}
+
+.title {
+    font-weight: bold;
+    font-size: medium;
+    width: 100%;
+}
+
+mat-list-item {
+    height: auto !important;
+}
+
+.full-width {
+    width: 100%;
 }
