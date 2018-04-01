@@ -1,0 +1,28 @@
+.container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.sidenav {
+    width: 20vw;
+}
+
+.snippet {
+    width: 400px;
+    margin: 10px;
+}
+
+.new {
+    margin: 10px;
+}
+
+mat-card-title {
+    cursor: pointer;
+}
+
+.mat-card-header-text {
+    width: 100%;
+}

@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { NewDialogComponent } from '../new-dialog/new-dialog.component';
+import { AngularFirestoreCollection, AngularFirestore } from 'angularfire2/firestore';
+import { Snippet } from './snippet';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     selector: 'app-snippets',
@@ -10,18 +13,30 @@ import { NewDialogComponent } from '../new-dialog/new-dialog.component';
 })
 export class SnippetsComponent implements OnInit {
 
-    constructor(private dialog: MatDialog) { }
+    private snippetsCollection: AngularFirestoreCollection<Snippet>;
+    snippets: Observable<Snippet[]>;
+    sidenavOpened: boolean;
+
+    constructor(private dialog: MatDialog, private aFirestore: AngularFirestore) { }
 
     ngOnInit() {
+        this.sidenavOpened = true;
+        this.snippetsCollection = this.aFirestore.collection<Snippet>('snippets', ref => ref.orderBy('updatedAt', 'desc'));
+        this.snippets = this.snippetsCollection.valueChanges();
     }
 
-    showDialog() {
-        let dialogRef = this.dialog.open(NewDialogComponent, {
-            minWidth: '600px'
+    showDialog(id?: string) {
+        const dialogRef = this.dialog.open(NewDialogComponent, {
+            minWidth: '600px',
+            disableClose: true,
+            data: {
+                id: id
+            }
         });
-        dialogRef.afterClosed().subscribe((result) => {
-            console.log(result);
-        });
+    }
+
+    remove(id: string) {
+        this.snippetsCollection.doc<Snippet>(id).delete();
     }
 
 }

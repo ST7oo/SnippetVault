@@ -1,6 +1,10 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Snippet } from '../snippets/snippet';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from 'angularfire2/firestore';
+import { DocumentReference } from '@firebase/firestore-types';
+import { Observable } from 'rxjs/Observable';
+import * as firebase from 'firebase/app';
 
 @Component({
     selector: 'app-new-dialog',
@@ -12,52 +16,83 @@ export class NewDialogComponent implements OnInit {
 
     snippet: Snippet;
     type: string;
-    title: string;
     text: string;
     saving: boolean;
     callSave: boolean;
+    docId: string;
+    private snippetsCollection: AngularFirestoreCollection<Snippet>;
+    private snippetDoc: AngularFirestoreDocument<Snippet>;
+    private timeout: any;
     @ViewChild('newStepElement') newStepElement: ElementRef;
     @ViewChild('titleElement') titleElement: ElementRef;
 
-    constructor(private dialogRef: MatDialogRef<NewDialogComponent>) { }
+    constructor(
+        private aFirestore: AngularFirestore,
+        private dialogRef: MatDialogRef<NewDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: any
+    ) { }
 
     ngOnInit() {
+        this.dialogRef.backdropClick().subscribe(() => {
+            this.close();
+        });
+        this.snippetsCollection = this.aFirestore.collection<Snippet>('snippets');
         this.type = 'text';
-        this.title = '';
         this.text = '';
         this.snippet = new Snippet();
+        if (this.data.id) {
+            this.docId = this.data.id;
+            this.snippetDoc = this.snippetsCollection.doc<Snippet>(this.docId);
+            this.snippetDoc.valueChanges().subscribe((snippet) => {
+                this.snippet = snippet;
+            });
+        } else {
+            this.docId = this.aFirestore.createId();
+            this.snippet.id = this.docId;
+            this.snippet.createdAt = this.timestamp;
+            this.snippet.updatedAt = this.timestamp;
+        }
     }
 
     close() {
+        clearTimeout(this.timeout);
+        if (this.snippet.title && this.snippet.title.trim().length) {
+            this.snippetsCollection.doc(this.docId).set(Object.assign({}, this.snippet));
+        }
         this.dialogRef.close();
     }
 
     typeTitle($event) {
-        if (this.title.trim().length) {
+        if (this.snippet.title.trim().length) {
             this.save();
         }
     }
 
     typeText($event) {
         if (this.text.trim().length) {
-            this.save();
+            // this.save();
         }
     }
 
     private save() {
         if (!this.saving) {
             this.saving = true;
-            setTimeout(() => {
-                console.log(this.title);
+            this.timeout = setTimeout(() => {
+                console.log(this.snippet);
+                this.snippet.updatedAt = this.timestamp;
+                this.snippetsCollection.doc(this.docId).set(Object.assign({}, this.snippet));
                 this.saving = false;
                 if (this.callSave) {
                     this.callSave = false;
                     this.save();
                 }
             }, 5000);
-        }
-        else {
+        } else {
             this.callSave = true;
         }
+    }
+
+    get timestamp() {
+        return firebase.firestore.FieldValue.serverTimestamp();
     }
 }

@@ -65,10 +65,9 @@ export class LoginComponent implements OnInit {
     }
 
     getError(control) {
-        if (control == 'email') {
+        if (control === 'email') {
             return this.email.hasError('required') ? 'Email is required' : this.email.hasError('email') ? 'Email is invalid' : '';
-        }
-        else if (control == 'password') {
+        } else if (control === 'password') {
             return this.password.hasError('required') ? 'Password is required' : '';
         }
     }

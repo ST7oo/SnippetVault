@@ -2,7 +2,7 @@
     <mat-toolbar color="primary">
         <span>SnippetVault</span>
         <div fxFlex="auto"></div>
-        <ng-container *ngIf="(auth.user | async) || {} as user">
+        <ng-container *ngIf="user || {} as user">
             <button mat-button *ngIf="!user.uid" [routerLink]="['login']">Login</button>
             <div *ngIf="user.uid">
                 <button mat-button [matMenuTriggerFor]="menu" fxLayoutAlign="center center">

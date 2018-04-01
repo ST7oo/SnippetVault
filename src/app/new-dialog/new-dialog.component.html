@@ -1,16 +1,16 @@
 <div mat-dialog-title>
     <mat-form-field [floatPlaceholder]="'never'" class="full-width">
-        <textarea #titleElement matInput matTextareaAutosize class="input title" placeholder="Title..." [(ngModel)]="title" (keyup)="typeTitle($event)"></textarea>
+        <textarea #titleElement matInput matTextareaAutosize class="input title" placeholder="Title..." [(ngModel)]="snippet.title" (ngModelChange)="typeTitle($event)"></textarea>
     </mat-form-field>
 </div>
 
 <div mat-dialog-content>
     <mat-list>
-        <mat-list-item *ngFor="let step of snippet.steps; let index = index">
+        <mat-list-item *ngFor="let step of snippet.steps">
             <!-- <div [ngSwitch]="step.type">
                 <input *ngSwitchCase="'text'" type="text" class="input" [(ngModel)]="step.text" />
             </div> -->
-            <input type="text" class="input" [(ngModel)]="snippet.steps[index]" />
+            <!-- <input type="text" class="input" [(ngModel)]="step" /> -->
         </mat-list-item>
         <mat-list-item>
             <div class="full-width" fxLayoutAlign="start start">

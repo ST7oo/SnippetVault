@@ -1,8 +1,38 @@
-<div fxLayout="row">
-    <div fxFlex="20">Search</div>
-    <div fxFlex>
-        <button mat-raised-button color="accent" (click)="showDialog()">
-            New
-        </button>
-    </div>
-</div>
+<mat-sidenav-container class="container">
+    <mat-sidenav #sidenav mode="side" [(opened)]="sidenavOpened" class="sidenav">
+        Search
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+        <div fxLayout="row" fxLayoutAlign="center center" class="new">
+            <button mat-raised-button color="accent" (click)="showDialog()">
+                New
+            </button>
+        </div>
+        <div fxLayout="row wrap">
+            <mat-card class="snippet" *ngFor="let snippet of snippets | async">
+                <mat-card-header>
+                    <!-- <div mat-card-avatar class="example-header-image"></div> -->
+                    <mat-card-title (click)="showDialog(snippet.id)">
+                        <b>{{snippet.title}}</b>
+                    </mat-card-title>
+                    <mat-card-subtitle>
+                        Tags
+                    </mat-card-subtitle>
+                </mat-card-header>
+                <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
+                <mat-card-content>
+                    <p>
+                        Steps
+                    </p>
+                </mat-card-content>
+                <mat-card-actions fxLayout="row" fxLayoutAlign="space-between center">
+                    <button fxFlex="10" mat-button (click)="remove(snippet.id)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <div fxFlex="27">{{snippet.updatedAt | date:'yyyy/MM/dd HH:mm'}}</div>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>
